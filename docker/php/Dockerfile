@@ -1,5 +1,6 @@
 FROM php:8.2-fpm
 
+
 RUN apt-get update --fix-missing
 RUN apt-get install -y zip unzip libonig-dev libicu-dev
 RUN apt-get install -y libzip-dev libpq-dev
