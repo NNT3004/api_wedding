@@ -6,7 +6,9 @@ RUN apt-get install -y libzip-dev libpq-dev
 RUN apt-get install -y build-essential libssl-dev zlib1g-dev
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo zip pdo_pgsql pgsql opcache
+RUN docker-php-ext-install pdo zip pdo_pgsql pgsql
+RUN docker-php-ext-configure opcache --enable-opcache --disable-jit
+RUN docker-php-ext-install opcache
 RUN docker-php-ext-enable pdo zip pdo_pgsql pgsql opcache
 
 COPY /api/php.ini /usr/local/etc/php/conf.d/opcache.ini
@@ -18,6 +20,8 @@ WORKDIR /var/www
 
 RUN chmod 777 -R /var/www/cache
 RUN composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction
+
+RUN cp .env.example .env || touch .env
 
 RUN php saya key
 RUN php saya view:cache
